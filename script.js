@@ -7,34 +7,66 @@ function writePassword() {
   var passwordText = document.querySelector("#password");
 
   passwordText.value = password;
-
 }
 
-var upper = prompt("Would you like upper case letters? Y or N");
-console.log("Upper: " + upper);
+function generatePassword() {
+  // Prompt the user for password requirements
+  var uppercase = confirm("Include uppercase letters?");
+  var lowercase = confirm("Include lowercase letters?");
+  var numbers = confirm("Include numbers?");
+  var specialChars = confirm("Include special characters?");
+  var length = prompt("Specify the length of the password (between 8 - 128 characters):");
 
-var numbers = prompt("Would you like to include numbers? Y or N");
-console.log("Numbers: " + numbers);
+  // Validate the length input
+  while (length < 8 || length > 128) {
+    length = prompt("Invalid length. Please specify a length between 8 - 128 characters:");
+  }
 
-var characters = prompt("Would you like to include special characters? i.e. !@#$% Y or N");
-console.log("Special: " + characters);
+  // Define character sets based on user requirements
+  var uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  var lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
+  var numberChars = "0123456789";
+  var specialChars = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
 
-var prompt = prompt("Please indicate a password length between 8 - 128 characters.");
-console.log("Length: " + prompt);
+  // Create an array to store the character sets based on user requirements
+  var charSet = [];
 
+  if (uppercase) {
+    charSet.push(uppercaseChars);
+  }
 
+  if (lowercase) {
+    charSet.push(lowercaseChars);
+  }
 
-var generatePassword = (
-  length = 20,
-  wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$'
-) =>
-  Array.from(crypto.getRandomValues(new Uint32Array(length)))
-    .map((x) => wishlist[x % wishlist.length])
-    .join('')
+  if (numbers) {
+    charSet.push(numberChars);
+  }
 
-console.log(generatePassword())
+  if (specialChars) {
+    charSet.push(specialChars);
+  }
 
+  // Generate the password
+  var password = "";
+  var charSetLength = charSet.length;
+
+  for (var i = 0; i < length; i++) {
+    var randomCharSetIndex = Math.floor(Math.random() * charSetLength);
+    var randomCharSet = charSet[randomCharSetIndex];
+    var randomCharIndex = Math.floor(Math.random() * randomCharSet.length);
+    var randomChar = randomCharSet[randomCharIndex];
+    password += randomChar;
+  }
+
+  return password;
+}
+
+// Call the generatePassword function and display the generated password
+var generatedPassword = generatePassword();
+console.log("Generated Password: " + generatedPassword);
 
 
 // Add event listener to generate button
 generateBtn.addEventListener("click", writePassword);
+
